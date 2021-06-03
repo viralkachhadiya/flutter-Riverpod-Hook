@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:shoppinglist_riverpod/controllers/auth_controller.dart';
 import 'package:shoppinglist_riverpod/controllers/item_list_controller.dart';
 import 'package:shoppinglist_riverpod/models/item_model.dart';
 import 'package:shoppinglist_riverpod/repositories/custom_exception.dart';
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Firebase Riverpod',
+      title: 'Flutter Riverpod',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -27,18 +26,19 @@ class MyApp extends StatelessWidget {
 class HomeScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final authControllerState = useProvider(authControllerProvider);
+    //final authControllerState = useProvider(authControllerProvider);
     final itemListFilter = useProvider(itemListFilterProvider);
     final isObtainedFilter = itemListFilter.state == ItemListFilter.obtained;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping List'),
-        leading: authControllerState != null
-            ? IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () => context.read(authControllerProvider.notifier).signOut(),
-              )
-            : null,
+        // leading: authControllerState != null
+        //     ? IconButton(
+        //         icon: const Icon(Icons.logout),
+        //         onPressed: () =>
+        //             context.read(authControllerProvider.notifier).signOut(),
+        //       )
+        //     : null,
         actions: [
           IconButton(
             icon: Icon(
@@ -113,7 +113,9 @@ class AddItemDialog extends HookWidget {
                 ),
                 onPressed: () {
                   isUpdating
-                      ? context.read(itemListControllerProvider.notifier).updateItem(
+                      ? context
+                          .read(itemListControllerProvider.notifier)
+                          .updateItem(
                             updatedItem: item.copyWith(
                               name: textController.text.trim(),
                               obtained: item.obtained,
@@ -186,8 +188,9 @@ class ItemTile extends HookWidget {
             .updateItem(updatedItem: item.copyWith(obtained: !item.obtained)),
       ),
       onTap: () => AddItemDialog.show(context, item),
-      onLongPress: () =>
-          context.read(itemListControllerProvider.notifier).deleteItem(itemId: item.id!),
+      onLongPress: () => context
+          .read(itemListControllerProvider.notifier)
+          .deleteItem(itemId: item.id!),
     );
   }
 }

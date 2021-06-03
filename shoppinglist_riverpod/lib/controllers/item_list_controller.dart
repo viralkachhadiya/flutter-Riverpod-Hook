@@ -1,8 +1,8 @@
-import 'package:shoppinglist_riverpod/controllers/auth_controller.dart';
 import 'package:shoppinglist_riverpod/models/item_model.dart';
 import 'package:shoppinglist_riverpod/repositories/custom_exception.dart';
 import 'package:shoppinglist_riverpod/repositories/item_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 enum ItemListFilter {
   all,
@@ -33,8 +33,9 @@ final itemListExceptionProvider = StateProvider<CustomException?>((_) => null);
 final itemListControllerProvider =
     StateNotifierProvider<ItemListController, AsyncValue<List<Item>>>(
   (ref) {
-    final user = ref.watch(authControllerProvider);
-    return ItemListController(ref.read, user?.uid);
+    //TODO: Changes
+    //final user = ref.watch(authControllerProvider);
+    return ItemListController(ref.read, "1001"); //user?.uid);
   },
 );
 
@@ -63,7 +64,7 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
 
   Future<void> addItem({required String name, bool obtained = false}) async {
     try {
-      final item = Item(name: name, obtained: obtained);
+      final item = Item(id: Uuid().toString(), name: name, obtained: obtained);
       final itemId = await _read(itemRepositoryProvider).createItem(
         userId: _userId!,
         item: item,
